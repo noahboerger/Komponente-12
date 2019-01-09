@@ -1,0 +1,2 @@
+public class Komponente12 {
+}
