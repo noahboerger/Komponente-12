@@ -2,44 +2,87 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 
 public class Komponente12 {
-    public void main (String[]args){
-        System.out.println(execute(new BigInteger("1"),new BigInteger("100")));
+
+    public static void main(String args[]) {
+        ArrayList<BigInteger> primes = Komponente12.getInstance().innerMethodExecute(new BigInteger("2"), new BigInteger("293"));
+        for (BigInteger bigint : primes) {
+            System.out.println(bigint.intValue());
+        }
     }
 
-    private ArrayList<BigInteger> execute (BigInteger rangeFrom, BigInteger rangeTo){
-        BigInteger zahl = rangeFrom;
-        ArrayList primeList = new ArrayList<BigInteger>();
-        while(! zahl.equals(rangeTo.add(new BigInteger("1")))){
-            //teste ob Primzahl
-            if (isPrime(zahl)){
-                //teste ob Bedingung
-                if(fulfillsRequirement(zahl)){
-                    primeList.add(zahl);
+    private static Komponente12 instance = new Komponente12();
+    public Port port;
+
+    private Komponente12() {
+        port = new Port();
+    }
+
+    public static Komponente12 getInstance() {
+        return instance;
+    }
+
+    public class Port implements IKomponente12 {
+        @Override
+        public ArrayList<BigInteger> execute(BigInteger rangeFrom, BigInteger rangeTo) {
+            return innerMethodExecute(rangeFrom, rangeTo);
+        }
+    }
+
+    public ArrayList<BigInteger> innerMethodExecute(BigInteger rangeFrom, BigInteger rangeTo) {
+        ArrayList<BigInteger> candidates = generatePrimes(rangeFrom, rangeTo);
+        ArrayList<BigInteger> solution = new ArrayList<>();
+        for (BigInteger number : candidates) {
+            if (checkNumber(number)) {
+                solution.add(number);
+            }
+        }
+        return solution;
+    }
+
+    private boolean checkNumber(BigInteger candidate) {
+        BigInteger testNumber = candidate.add(new BigInteger("1"));
+        return checkNumberRecursive(testNumber);
+    }
+
+    private boolean checkNumberRecursive(BigInteger candidate) {
+        if (candidate.equals(new BigInteger("1"))) {
+            return true;
+        }
+        BigInteger two = new BigInteger("2");
+        BigInteger three = new BigInteger("3");
+        if (candidate.divide(two).multiply(two).equals(candidate)) {
+            return checkNumberRecursive(candidate.divide(two));
+        } else if (candidate.divide(three).multiply(three).equals(candidate)) {
+            return checkNumberRecursive(candidate.divide(three));
+        }return false;
+    }
+
+    private ArrayList<BigInteger> generatePrimes(BigInteger rangeFrom, BigInteger rangeTo) {
+        ArrayList<BigInteger> list = new ArrayList();
+        BigInteger counter = new BigInteger(rangeFrom.toString());
+        while (counter.compareTo(rangeTo.add(new BigInteger("1"))) != 0) {
+            if (isPrime(counter)) {
+                list.add(counter);
+            }
+            counter = counter.add(new BigInteger("1"));
+        }
+        return list;
+    }
+
+    private boolean isPrime(BigInteger testNumber) {
+        int divisorCounter = 1;
+        BigInteger index, i;
+
+        for (index = new BigInteger("2"); index.compareTo(testNumber) != 1; index = index.add(new BigInteger("1"))) {
+            for (i = new BigInteger("2"); i.compareTo(index) != 1; i = i.add(new BigInteger("1"))) {
+                if ((testNumber.mod(i).equals(BigInteger.ZERO))) {
+                    divisorCounter++;
+                }
+                if (divisorCounter > 2) {
+                    return false;
                 }
             }
-            zahl.add(new BigInteger("1"));
-        }
-        return primeList;
-    }
-
-    public boolean isPrime (BigInteger zahl){
-        BigInteger i = new BigInteger("2");
-        BigInteger maxi = new BigInteger(String.valueOf(zahl));
-        if (zahl.intValue() >= 5)maxi = zahl.divide(i).add(new BigInteger("1"));
-        while (! i.equals(maxi)){
-            if (zahl.mod(i).equals(0)) return false;
         }
         return true;
     }
-
-    public boolean fulfillsRequirement(BigInteger zahl){
-
-        for (int v = 0 ; v <= 153 ; v++){
-            for (int u = 0 ; u <= 109 ; u++){
-                if (zahl.equals(new BigInteger("2").pow(u).multiply(new BigInteger("3").pow(v))))return true;
-            }
-        }
-        return false;
-    }
-
 }
