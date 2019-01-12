@@ -3,13 +3,6 @@ import java.util.ArrayList;
 
 public class Komponente12 {
 
-    public static void main(String args[]) {
-        ArrayList<BigInteger> primes = Komponente12.getInstance().innerMethodExecute(new BigInteger("2"), new BigInteger("293"));
-        for (BigInteger bigint : primes) {
-            System.out.println(bigint.intValue());
-        }
-    }
-
     private static Komponente12 instance = new Komponente12();
     public Port port;
 
@@ -28,7 +21,7 @@ public class Komponente12 {
         }
     }
 
-    public ArrayList<BigInteger> innerMethodExecute(BigInteger rangeFrom, BigInteger rangeTo) {
+    private ArrayList<BigInteger> innerMethodExecute(BigInteger rangeFrom, BigInteger rangeTo) {
         ArrayList<BigInteger> candidates = generatePrimes(rangeFrom, rangeTo);
         ArrayList<BigInteger> solution = new ArrayList<>();
         for (BigInteger number : candidates) {
@@ -54,7 +47,8 @@ public class Komponente12 {
             return checkNumberRecursive(candidate.divide(two));
         } else if (candidate.divide(three).multiply(three).equals(candidate)) {
             return checkNumberRecursive(candidate.divide(three));
-        }return false;
+        }
+        return false;
     }
 
     private ArrayList<BigInteger> generatePrimes(BigInteger rangeFrom, BigInteger rangeTo) {
