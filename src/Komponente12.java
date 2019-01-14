@@ -22,7 +22,11 @@ public class Komponente12 {
     }
 
     private ArrayList<BigInteger> innerMethodExecute(BigInteger rangeFrom, BigInteger rangeTo) {
-        ArrayList<BigInteger> candidates = generatePrimes(rangeFrom, rangeTo);
+        BigInteger border = rangeFrom;
+        if(rangeFrom.compareTo(new BigInteger("2")) < 0) {
+            border = new BigInteger("2");
+        }
+        ArrayList<BigInteger> candidates = generatePrimes(border, rangeTo);
         ArrayList<BigInteger> solution = new ArrayList<>();
         for (BigInteger number : candidates) {
             if (checkNumber(number)) {
